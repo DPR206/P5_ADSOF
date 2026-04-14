@@ -13,6 +13,6 @@ public class PersonFeaturizer implements Featurizer<Person> {
 
 	@Override
 	public List<Object> getFeatureValues(Person p) {
-		return List.of(p.age, p.weight, p.height, p.gender ? "MALE" : "FEMALE");
+		return List.of(p.getAge(), p.getWeight(), p.getWeight(), p.isMale() ? "MALE" : "FEMALE");
 	}
 }

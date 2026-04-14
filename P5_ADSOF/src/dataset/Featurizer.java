@@ -2,7 +2,9 @@ package dataset;
 
 import java.util.List;
 
-public interface Featurizer {
+public interface Featurizer<T> {
 
-	public List<String> getFeatures();
+	List<String> getFeatureNames();
+
+	List<Object> getFeatureValues(T object);
 }

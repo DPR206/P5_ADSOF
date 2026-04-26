@@ -91,7 +91,7 @@ public class DecisionTree <T>{
 		return classification;
 	}
 	
-	public String predictEach(Nodo<T> actual, T element) throws ObjetoSinSalida{
+	private String predictEach(Nodo<T> actual, T element) throws ObjetoSinSalida{
 		
 		List<Predicate<? super T>> conditions = actual.getConditions();
 		List<DecisionTree<T>> hijos = this.nodos.get(actual);
@@ -127,6 +127,53 @@ public class DecisionTree <T>{
 		
 		return classification;
 	}
+	
+	public Predicate<T> getPredicate(String etiqueta){
+		
+		return this.getPredicateEach(raiz, etiqueta, p -> true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Predicate<T> getPredicateEach(Nodo<T> actual, String etiqueta, Predicate<T> predicado){
+		
+		//Si hemos llegado al nodo buscado devolvemos el predicado
+		if(actual.getEtiqueta().equals(etiqueta))
+			return predicado;
+		
+		List<Predicate<? super T>> conditions = actual.getConditions();
+		List<DecisionTree<T>> hijos = this.nodos.get(actual);
+		
+		if(hijos != null) {
+			for(int i=0; i < hijos.size(); i++) {
+				Predicate<T> predicadoActual;
+				
+				if(i < conditions.size()) {
+					//Las condiciones de cada hijo
+					Predicate<? super T> condicion = conditions.get(i);
+					predicadoActual = (Predicate<T>) condicion;
+				} else {
+					//Estamos en el caso otherwise, lo que implica la negación de todas las condiciones
+					Predicate<T> ningunaCondicion = p -> true;
+	                for (Predicate<? super T> c : conditions) {
+	                    ningunaCondicion = ningunaCondicion.and(c.negate());
+	                }
+	                predicadoActual = ningunaCondicion;
+				}
+				
+				//Buscamos el resto del predicado a través del hijo
+				Predicate<T> resultado = this.getPredicateEach(
+						hijos.get(i).getNodo(), 
+						etiqueta, 
+						predicado.and(predicadoActual));
+				
+				if(resultado != null)
+					return resultado;
+			}
+		}
+		
+		return null;
+	}
+	
 
 	/**
 	 * @return the nodo

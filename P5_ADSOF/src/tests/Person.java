@@ -34,4 +34,11 @@ public class Person {
 	public boolean isMale() {
 		return gender;
 	}
+
+	@Override
+	public String toString() {
+		return name + "(age: " + age + " " + (gender==true ? "male":"female") + ")";
+	}
+	
+	
 }

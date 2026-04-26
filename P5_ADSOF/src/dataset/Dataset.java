@@ -7,6 +7,7 @@ public class Dataset<T> {
 	private final Map<String, Feature<?>> features;
 	private final Featurizer<T> featurizer;
 	private int size;
+	private List<T> objects = new ArrayList();
 
 	public Dataset(Featurizer<T> featurizer) {
 		this.featurizer = featurizer;
@@ -52,6 +53,13 @@ public class Dataset<T> {
 		return size;
 	}
 
+	/**
+	 * @return the objects
+	 */
+	public List<T> getObjects() {
+		return objects;
+	}
+
 	@SuppressWarnings("unchecked")
     private <V extends Comparable<V>> void addToFeature(Feature<?> feature, Object value) {
         ((Feature<V>) feature).add((V) value);
@@ -60,6 +68,7 @@ public class Dataset<T> {
     @SuppressWarnings("unchecked")
 	public void addAll(T... items) {
         for (T item : items) {
+        	this.objects.add(item);
             List<Object> values = featurizer.getFeatureValues(item);
             List<String> names = featurizer.getFeatureNames();
             for (int i = 0; i < names.size(); i++) {

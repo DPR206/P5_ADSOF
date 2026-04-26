@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import dataset.*;
+import exceptions.*;
 
 /**
  * 
@@ -53,9 +54,11 @@ public class DecisionTree <T>{
         return null;
 	}
 	
-	public DecisionTree<T> withCondition(String etiqueta, Predicate<? super T> condition) {
+	public DecisionTree<T> withCondition(String etiqueta, Predicate<? super T> condition)  throws CicloArbol {
 		
 		DecisionTree<T> arbolHijo = new DecisionTree<>();
+		if(this.encontrarNodo(raiz, etiqueta) != null)
+			throw new CicloArbol(etiqueta, this.nodo.getEtiqueta());
 		arbolHijo.setNodo(new Nodo<T>(etiqueta));
 		
 		this.nodos.computeIfAbsent(this.nodo, n -> new ArrayList<>()).add(arbolHijo);
@@ -64,9 +67,11 @@ public class DecisionTree <T>{
 		return this;
 	}
 
-	public DecisionTree<T> otherwise(String etiqueta) {
+	public DecisionTree<T> otherwise(String etiqueta)  throws CicloArbol {
 		
-		DecisionTree<T> arbolHijo = new DecisionTree<>();		
+		DecisionTree<T> arbolHijo = new DecisionTree<>();	
+		if(this.encontrarNodo(raiz, etiqueta) != null)
+			throw new CicloArbol(etiqueta, this.nodo.getEtiqueta());
 		arbolHijo.setNodo(new Nodo<T>(etiqueta));
 		
 		this.nodos.computeIfAbsent(this.nodo, n -> new ArrayList<>()).add(arbolHijo);
@@ -75,7 +80,7 @@ public class DecisionTree <T>{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Map<String, List<T>> predict(T...elements){
+	public Map<String, List<T>> predict(T...elements) throws ObjetoSinSalida{
 		this.classification.clear();
 		for(T element : elements) {
 			String resultadoEtiqueta = predictEach(this.raiz, element);
@@ -86,7 +91,7 @@ public class DecisionTree <T>{
 		return classification;
 	}
 	
-	public String predictEach(Nodo<T> actual, T element) {
+	public String predictEach(Nodo<T> actual, T element) throws ObjetoSinSalida{
 		
 		List<Predicate<? super T>> conditions = actual.getConditions();
 		List<DecisionTree<T>> hijos = this.nodos.get(actual);
@@ -105,13 +110,14 @@ public class DecisionTree <T>{
 		if(hijos.size() > conditions.size()) {
 			DecisionTree<T> otherwise = hijos.get(hijos.size() - 1);
 			return otherwise.predictEach(otherwise.getNodo(), element);
-		}
+		} else
+			throw new ObjetoSinSalida(actual.getEtiqueta(), element);
 		
 		//return null;
-		return this.nodo.getEtiqueta();
+		//return this.nodo.getEtiqueta();
 	}
 	
-	public Map<String, List<T>> predict(Dataset<T> data){
+	public Map<String, List<T>> predict(Dataset<T> data) throws ObjetoSinSalida{
 		this.classification.clear();
 		for(T element : data.getObjects()) {
 			String resultadoEtiqueta = predictEach(this.raiz, element);

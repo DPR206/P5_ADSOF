@@ -7,7 +7,7 @@ public class Dataset<T> {
 	private final Map<String, Feature<?>> features;
 	private final Featurizer<T> featurizer;
 	private int size;
-	private List<T> objects = new ArrayList();
+	private List<T> objects = new ArrayList<>();
 
 	public Dataset(Featurizer<T> featurizer) {
 		this.featurizer = featurizer;

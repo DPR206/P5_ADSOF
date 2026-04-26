@@ -2,6 +2,8 @@ package tests;
 
 import dataset.*;
 import decision_tree.*;
+import exceptions.CicloArbol;
+import exceptions.ObjetoSinSalida;
 
 public class Apartado2Test {
 	
@@ -9,8 +11,16 @@ public class Apartado2Test {
 		Dataset<Person> dataSet = buildDataSet();
 		DecisionTree<Person> dt = buildDecisionTree();
 		
-		System.out.println(dt.predict(dataSet));
-		System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
+		try {
+			System.out.println(dt.predict(dataSet));
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
+		try {
+			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -25,13 +35,21 @@ public class Apartado2Test {
 	
 	private static DecisionTree<Person> buildDecisionTree(){
 		DecisionTree<Person> dt = new DecisionTree<>();
-		dt.node("root")
-			.withCondition("male", p -> p.isMale())
-			.otherwise("female");
-		dt.node("male")
-			.withCondition("old male", p -> p.getAge() > 65)
-			.withCondition("middle male", p -> p.getAge() <= 65 && p.getAge() > 34)
-			.otherwise("young male");
+		try {
+			dt.node("root")
+				.withCondition("male", p -> p.isMale())
+				.otherwise("female");
+		} catch (CicloArbol e) {
+			e.printStackTrace();
+		}
+		try {
+			dt.node("male")
+				.withCondition("old male", p -> p.getAge() > 65)
+				.withCondition("middle male", p -> p.getAge() <= 65 && p.getAge() > 34)
+				.otherwise("young male");
+		} catch (CicloArbol e) {
+			e.printStackTrace();
+		}
 		return dt;
 	}
 }

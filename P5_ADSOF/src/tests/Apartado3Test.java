@@ -2,41 +2,20 @@ package tests;
 
 import java.util.function.Predicate;
 
-import dataset.Dataset;
 import decision_tree.DecisionTree;
 import exceptions.CicloArbol;
-import exceptions.ObjetoSinSalida;
 
 public class Apartado3Test {
 
 	public static void main(String[] args) {
-		Dataset<Person> dataSet = buildDataSet();
-		DecisionTree<Person> dt = buildDecisionTree();
 		
-		try {
-			System.out.println(dt.predict(dataSet));
-		} catch (ObjetoSinSalida e) {
-			e.printStackTrace();
-		}
-		try {
-			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
-		} catch (ObjetoSinSalida e) {
-			e.printStackTrace();
-		}
+		DecisionTree<Person> dt = buildDecisionTree();
 		
 		Predicate<Person> isOldMale = dt.getPredicate("old male");
 		
 		System.out.println(isOldMale.test(new Person("Miguel", 86, 72, 165, true)));
+		System.out.println(isOldMale.test(new Person("Clara", 42, 59, 162, false)));
 		
-	}
-	
-	private static Dataset<Person> buildDataSet() {
-		Person people[] = { new Person("Pedro", 66, 75, 180, true), new Person("Ana", 47, 54, 158, false),
-				new Person("Luis", 34, 75, 176, true), new Person("Rosa", 47, 54, 158, false) };
-
-		Dataset<Person> dataset = new Dataset<>(new PersonFeaturizer());
-		dataset.addAll(people);
-		return dataset;
 	}
 	
 	private static DecisionTree<Person> buildDecisionTree(){

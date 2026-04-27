@@ -78,6 +78,13 @@ public class Dataset<T> {
         }
     }
 
+	/**
+	 * @return the features
+	 */
+	public Map<String, Feature<?>> getFeatures() {
+		return features;
+	}
+
 	@Override
 	public String toString() {
 		return features.toString();

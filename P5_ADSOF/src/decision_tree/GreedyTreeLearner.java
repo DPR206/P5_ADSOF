@@ -11,7 +11,7 @@ public class GreedyTreeLearner<T, S> {
 
 	
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset){
-		return buildTree(dataset.getObjects(), dataset.getFeatures());
+		return buildTree(dataset.getObjects(), dataset.getListFeatures());
 				
 	}
 	
@@ -20,15 +20,32 @@ public class GreedyTreeLearner<T, S> {
 				
 	}*/
 	
-	private DecisionTree<T> buildTree(LabeledDataSet<T, S> objects, Map<String, Feature<?>> features) {
+	private DecisionTree<T> buildTree(LabeledDataSet<T, S> objects, List<Feature<?>> availableFeatures) {
 		
-		if(features.keySet().size() == 1)
+		List<T> elements = objects.getObjects();
+		int total = 0;
+		LabelProvider<T, S> etiquetador = objects.getEtiquetador();
+		S etiqueta = etiquetador.asignarEtiqueta(elements.getFirst());
+		
+		for(T element : elements) {
+			if(!etiqueta.equals(etiquetador.asignarEtiqueta(element)))
+				break;
+			total++;
+		}
+		
+		if(total == elements.size()) {
+			DecisionTree<T> tree = new DecisionTree<>();
+			tree.setNodo(new Nodo<T>(etiquetador.asignarEtiqueta(elements.getFirst()).toString()));
+			return tree;
+		}
+		
+		
 		
 		return null;
 	}
 
 
-	private DecisionTree<T> buildTree(List<T> objects, Map<String, Feature<?>> features) {
+	private DecisionTree<T> buildTree(List<T> objects, List<Feature<?>> availableFeatures) {
 		
 	
 		

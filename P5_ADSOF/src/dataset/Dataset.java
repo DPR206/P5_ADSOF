@@ -84,6 +84,10 @@ public class Dataset<T> {
 	public Map<String, Feature<?>> getFeatures() {
 		return features;
 	}
+	
+	public List<Feature<?>> getListFeatures(){
+		return this.features.values().stream().toList();
+	}
 
 	@Override
 	public String toString() {

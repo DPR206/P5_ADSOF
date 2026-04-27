@@ -1,7 +1,6 @@
 package decision_tree;
 
 import java.util.*;
-import java.math.*;
 
 import dataset.*;
 
@@ -12,12 +11,12 @@ public class GreedyTreeLearner<T, S> {
 
 	
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset){
-		return buildTree(dataset.getObjects(), dataset.getListFeatures());
+		return buildTree(dataset, dataset.getListFeatures());
 				
 	}
 	
-	/*public DecisionTree<T> learn(List<T> data){
-		return buildTree(data, data);
+	/*public DecisionTree<T> learn(Collection<T> data){
+		return buildTree(data.stream().toList(), data);
 				
 	}*/
 	

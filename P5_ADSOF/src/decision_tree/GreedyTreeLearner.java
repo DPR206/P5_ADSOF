@@ -1,6 +1,7 @@
 package decision_tree;
 
 import java.util.*;
+import java.math.*;
 
 import dataset.*;
 
@@ -20,6 +21,7 @@ public class GreedyTreeLearner<T, S> {
 				
 	}*/
 	
+	//a lo mejor en vez de una lista de features debería ser una lista de strings de features
 	private DecisionTree<T> buildTree(LabeledDataSet<T, S> objects, List<Feature<?>> availableFeatures) {
 		
 		List<T> elements = objects.getObjects();
@@ -39,9 +41,23 @@ public class GreedyTreeLearner<T, S> {
 			return tree;
 		}
 		
+		int indexFeature = (int) ((Math.random() * ((availableFeatures.size()-1) - 0 + 1)) + 0);
+		//(Math.random() * (max - min + 1)) + min
+		
+		Feature<?> featureSplit = availableFeatures.get(indexFeature);
+		availableFeatures.remove(featureSplit);
+		
+		//split data into subsets based on featureSplit, the number of subsets is equal to the number of different values
+		//of featureSplit in the data
+		
+		DecisionTree<T> resultTree = new DecisionTree<>();
+		
+		//for-each subset de data {x in data | x.feat == value}
+		// 	añadir la condicion featureSplit == value 
+		//	resultTree.addArbolHijo(nodo, this.buildTree(subset, availableFeatures));
 		
 		
-		return null;
+		return resultTree;
 	}
 
 

@@ -174,6 +174,10 @@ public class DecisionTree <T>{
 		return null;
 	}
 	
+	
+	public void addArbolHijo(Nodo<T> nodo, DecisionTree<T> hijo) {
+		this.nodos.computeIfAbsent(nodo, n -> new ArrayList<>()).add(hijo);
+	}
 
 	/**
 	 * @return the nodo

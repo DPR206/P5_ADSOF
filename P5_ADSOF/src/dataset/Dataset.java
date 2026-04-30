@@ -23,31 +23,66 @@ public class Dataset<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-    public <V extends Comparable<V>> Feature<V> getFeature(String name) {
-        Feature<?> f = features.get(name);
-        if (f == null) throw new IllegalArgumentException("Feature no encontrada: " + name);
-        return (Feature<V>) f;
-    }
+	public <V extends Comparable<V>> Feature<V> getFeature(String name) {
+		Feature<?> f = features.get(name);
+		if (f == null)
+			throw new IllegalArgumentException("Feature no encontrada: " + name);
+		return (Feature<V>) f;
+	}
 
-	public void removeDuplicates() {
-        Set<String> seen = new HashSet<>();
-        List<String> names = featurizer.getFeatureNames();
-        int i = 0;
-        while (i < size) {
-            StringBuilder key = new StringBuilder();
-            for (String name : names) {
-                key.append(features.get(name).get(i)).append("|");
-            }
-            if (!seen.add(key.toString())) {
-                for (String name : names) {
-                    features.get(name).remove(i);
-                }
-                size--;
-            } else {
-                i++;
-            }
-        }
-    }
+	// Falta arreglar para diferentes tipos de duplicados
+	public <V> void removeDuplicates() {
+		List<String> features = featurizer.getFeatureNames();
+		Set<T> possiblyDuplicated = new HashSet<>(objects);
+
+		// Encontrar los duplicados reduciendo el número de posibles duplicados en cada iteración
+		for (String feat : features) {
+			Map<V, T> seenValueToObj = new HashMap<>();
+			Set<T> confirmedDuplicates = new HashSet<>();
+
+			for (T obj : possiblyDuplicated) {
+				V value = featurizer.getFeatureValue(obj, feat);
+
+				if (!seenValueToObj.containsKey(value)) {
+					seenValueToObj.put(value, obj);
+				} else {
+					T firstObj = seenValueToObj.get(value);
+					if (!confirmedDuplicates.contains(firstObj)) {
+						confirmedDuplicates.add(firstObj);
+					}
+					confirmedDuplicates.add(obj);
+				}
+			}
+			possiblyDuplicated = confirmedDuplicates;
+
+			if (possiblyDuplicated.isEmpty())
+				break;
+		}
+
+		// Eliminar duplicados de objects y features
+		if (!possiblyDuplicated.isEmpty()) {
+			//Mantenemos solo uno de los duplicados
+			List<T> toRemove = new ArrayList<>(possiblyDuplicated);
+			toRemove.remove(0);
+
+			List<Integer> indicesToRemove = new ArrayList<>();
+			for (T obj : toRemove) {
+				int idx = objects.indexOf(obj);
+				if (idx != -1) {
+					indicesToRemove.add(idx);
+				}
+			}
+			indicesToRemove.sort(Collections.reverseOrder());
+			for (String feat : featurizer.getFeatureNames()) {
+				Feature<?> feature = this.features.get(feat);
+				for (int idx : indicesToRemove) {
+					feature.remove(idx);
+				}
+			}
+			
+			objects.removeAll(toRemove);
+		}
+	}
 
 	public List<String> getFeatureNames() {
 		return featurizer.getFeatureNames();
@@ -65,22 +100,20 @@ public class Dataset<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-    private <V extends Comparable<V>> void addToFeature(Feature<?> feature, Object value) {
-        ((Feature<V>) feature).add((V) value);
-    }
+	private <V extends Comparable<? super V>> void addToFeature(Feature<?> feature, Object value) {
+		((Feature<? super V>) feature).add((V) value);
+	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void addAll(T... items) {
-        for (T item : items) {
-        	this.objects.add(item);
-            List<Object> values = featurizer.getFeatureValues(item);
-            List<String> names = featurizer.getFeatureNames();
-            for (int i = 0; i < names.size(); i++) {
-                addToFeature(features.get(names.get(i)), values.get(i));
-            }
-            size++;
-        }
-    }
+		for (T item : items) {
+			this.objects.add(item);
+			List<String> names = featurizer.getFeatureNames();
+			for (String n : names) {
+				addToFeature(features.get(n), featurizer.getFeatureValue(item, n));
+			}
+		}
+	}
 
 	/**
 	 * @return the features
@@ -88,8 +121,8 @@ public class Dataset<T> {
 	public Map<String, Feature<?>> getFeatures() {
 		return features;
 	}
-	
-	public List<Feature<?>> getListFeatures(){
+
+	public List<Feature<?>> getListFeatures() {
 		return this.features.values().stream().toList();
 	}
 

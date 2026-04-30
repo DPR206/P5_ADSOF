@@ -191,5 +191,10 @@ public class DecisionTree<T> {
 	public void setNodo(Nodo<T> nodo) {
 		this.nodo = nodo;
 	}
+	
+	@Override
+	public String toString() {
+		return raiz + " " + nodos;
+	}
 
 }

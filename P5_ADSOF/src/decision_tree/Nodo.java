@@ -47,5 +47,9 @@ public class Nodo<T> {
 		this.conditions.add(condition);
 	}
 	
+	@Override
+	public String toString() {
+		return etiqueta;
+	}
 }
 

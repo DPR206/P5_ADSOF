@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Featurizer<T> {
 
-	List<String> getFeatureNames();
+	public List<String> getFeatureNames();
 
-	List<Object> getFeatureValues(T object);
+	public <V extends Comparable<? super V>> V getFeatureValue(T object, String featureName);
 }

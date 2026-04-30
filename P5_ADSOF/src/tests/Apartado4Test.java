@@ -8,17 +8,15 @@ public class Apartado4Test {
 
 	public static void main(String[] args) {
 		LabeledDataSet<Weather, Boolean> dataset = buildDataSet();
+		System.out.println("Dataset : " + dataset);
 
-		// 2. Aprender el árbol
 		GreedyTreeLearner<Weather, Boolean> learner = new GreedyTreeLearner<>();
 		DecisionTree<Weather> tree = learner.learn(dataset);
 
-		System.out.println("=== Árbol de decisión aprendido ===");
-		System.out.println(tree);
-		System.out.println();
+		System.out.println("=== Árbol de decisión: ===");
+		System.out.println(tree + "\n");
 
-		// 3. Clasificar objetos nuevos
-		Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
+		/*Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
 				new Weather(WeatherCondition.RAINY, Temperature.COLD),
 				new Weather(WeatherCondition.SANDSTORM, Temperature.MILD),
 				new Weather(WeatherCondition.SUNNY, Temperature.COLD), };
@@ -31,7 +29,7 @@ public class Apartado4Test {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 
 	}
 

@@ -12,7 +12,14 @@ public class PersonFeaturizer implements Featurizer<Person> {
 	}
 
 	@Override
-	public List<Object> getFeatureValues(Person p) {
-		return List.of(p.getAge(), p.getWeight(), p.getWeight(), p.isMale() ? "MALE" : "FEMALE");
+	@SuppressWarnings("unchecked")
+	public <V extends Comparable<? super V>> V getFeatureValue(Person p, String featureName) {
+	    return switch (featureName) {
+	        case "age" -> (V) Integer.valueOf(p.getAge());
+	        case "weight" -> (V) Double.valueOf(p.getWeight());
+	        case "height" -> (V) Double.valueOf(p.getHeight());
+	        case "gender" -> (V) (p.isMale() ? "MALE" : "FEMALE");
+	        default -> throw new IllegalArgumentException("Unknown feature: " + featureName);
+	    };
 	}
 }

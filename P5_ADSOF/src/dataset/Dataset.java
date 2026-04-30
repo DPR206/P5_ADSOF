@@ -5,9 +5,9 @@ import java.util.*;
 public class Dataset<T> {
 
 	private final Map<String, Feature<?>> features;
-	private final Featurizer<T> featurizer;
+	protected final Featurizer<T> featurizer;
 	private int size;
-	private List<T> objects = new ArrayList<>();
+	protected List<T> objects = new ArrayList<>();
 
 	public Dataset(Featurizer<T> featurizer) {
 		this.featurizer = featurizer;
@@ -16,6 +16,10 @@ public class Dataset<T> {
 		for (String name : featurizer.getFeatureNames()) {
 			features.put(name, new Feature<>(name));
 		}
+	}
+
+	public Featurizer<T> getFeaturizer() {
+		return featurizer;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -43,6 +43,8 @@ public class Dataset<T> {
 			for (T obj : possiblyDuplicated) {
 				V value = featurizer.getFeatureValue(obj, feat);
 
+				//Si no está duplicado, se pone en la lista de posibles,
+				//si está duplicado, se busca el otro objeto que duplica y se añaden ambos a posibles duplicados
 				if (!seenValueToObj.containsKey(value)) {
 					seenValueToObj.put(value, obj);
 				} else {

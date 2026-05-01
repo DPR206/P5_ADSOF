@@ -24,18 +24,19 @@ public class LabeledDataSet<T, S> extends Dataset<T> {
 	}
 
 	public boolean allSameLabel() {
-		if (objects.isEmpty()) return true;
+		if (objects.isEmpty())
+			return true;
 		S first = labelOf(objects.get(0));
 		return objects.stream().allMatch(o -> labelOf(o).equals(first));
 	}
 
 	public Map<Object, LabeledDataSet<T, S>> split(String feature) {
-		int featureIndex = featurizer.getFeatureNames().indexOf(feature);
 		Map<Object, LabeledDataSet<T, S>> subsets = new LinkedHashMap<>();
 		for (T obj : objects) {
-			Object val = featurizer.getFeatureValues(obj).get(featureIndex);
+			Object val = featurizer.getFeatureValue(obj, feature);
 			subsets.computeIfAbsent(val, v -> new LabeledDataSet<>(featurizer, etiquetador)).objects.add(obj);
 		}
+		System.out.println("Subsets en funcion del feature: " + feature + " == " + subsets);
 		return subsets;
 	}
 

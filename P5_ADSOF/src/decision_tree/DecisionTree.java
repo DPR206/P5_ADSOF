@@ -14,187 +14,167 @@ import exceptions.*;
  */
 public class DecisionTree<T> {
 
-	private Nodo<T> raiz = null;
-	private Nodo<T> nodo = null;
-	private Map<Nodo<T>, List<DecisionTree<T>>> nodos = new LinkedHashMap<>();
-	private Map<String, List<T>> classification = new LinkedHashMap<>();
+	private String name = null;
+	private Predicate<T> predicate = null;
+	private DecisionTree<T> parent = null;
+	private List<DecisionTree<T>> children = new ArrayList<>();
 
 	public DecisionTree() {
+		this.predicate = p -> true;
 	}
 
-	public DecisionTree<T> node(String name) {
-
-		if (this.nodos.isEmpty()) {
-			Nodo<T> raiz = new Nodo<T>(name);
-			this.raiz = raiz;
-			this.nodo = raiz;
-			this.nodos.put(raiz, new ArrayList<>());
-		}
-
-		this.nodo = this.encontrarNodo(raiz, name);
-
-		return this;
+	public DecisionTree(String name) {
+		this.name = name;
+		this.predicate = p -> true;
 	}
 
-	public Nodo<T> encontrarNodo(Nodo<T> nodoActual, String etiqueta) {
+	public DecisionTree(String name, Predicate<T> p) {
+		this.name = name;
+		this.predicate = p;
+	}
 
-		if (nodoActual.getEtiqueta().equals(etiqueta))
-			return nodoActual;
+	public DecisionTree<T> encontrarNodo(String label) throws NotExistingNode {
+		if (this.name != null && this.name.equals(label))
+			return this;
 
-		List<DecisionTree<T>> hijos = nodos.get(nodoActual);
-
-		if (hijos != null) {
-			for (DecisionTree<T> hijo : hijos) {
-				Nodo<T> encontrado = hijo.encontrarNodo(hijo.getNodo(), etiqueta);
-				if (encontrado != null)
-					return encontrado;
+		for (DecisionTree<T> child : children) {
+			try {
+				return child.encontrarNodo(label);
+			} catch (NotExistingNode ignored) {
 			}
 		}
 
-		return null;
+		throw new NotExistingNode(label);
 	}
 
-	public DecisionTree<T> withCondition(String etiqueta, Predicate<? super T> condition) throws CicloArbol {
-
-		DecisionTree<T> arbolHijo = new DecisionTree<>();
-		if (this.encontrarNodo(raiz, etiqueta) != null)
-			throw new CicloArbol(etiqueta, this.nodo.getEtiqueta());
-		arbolHijo.setNodo(new Nodo<T>(etiqueta));
-
-		this.nodos.computeIfAbsent(this.nodo, n -> new ArrayList<>()).add(arbolHijo);
-		this.nodo.addCondition(condition);
-
-		return this;
+	private DecisionTree<T> root() {
+		DecisionTree<T> current = this;
+		while (current.parent != null)
+			current = current.parent;
+		return current;
 	}
 
-	public DecisionTree<T> otherwise(String etiqueta) throws CicloArbol {
-
-		DecisionTree<T> arbolHijo = new DecisionTree<>();
-		if (this.encontrarNodo(raiz, etiqueta) != null)
-			throw new CicloArbol(etiqueta, this.nodo.getEtiqueta());
-		arbolHijo.setNodo(new Nodo<T>(etiqueta));
-
-		this.nodos.computeIfAbsent(this.nodo, n -> new ArrayList<>()).add(arbolHijo);
-
-		return this;
+	public DecisionTree<T> node(String name) throws NotExistingNode {
+		if (this.name == null) {
+			this.name = name;
+			return this;
+		}
+		return root().encontrarNodo(name);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, List<T>> predict(T... elements) throws ObjetoSinSalida {
-		this.classification.clear();
-		for (T element : elements) {
-			String resultadoEtiqueta = predictEach(this.raiz, element);
+	public DecisionTree<T> withCondition(String label, Predicate<? super T> condition) throws CicloArbol {
 
-			this.classification.computeIfAbsent(resultadoEtiqueta, k -> new ArrayList<>()).add(element);
+		try {
+			root().encontrarNodo(label);
+			throw new CicloArbol(label, this.name);
+		} catch (NotExistingNode e) {
 		}
 
-		return classification;
+		DecisionTree<T> child = new DecisionTree<>(label, (Predicate<T>) condition);
+		child.setParent(this);
+		this.children.add(child);
+
+		return this;
 	}
 
-	private String predictEach(Nodo<T> actual, T element) throws ObjetoSinSalida {
 
-		List<Predicate<? super T>> conditions = actual.getConditions();
-		List<DecisionTree<T>> hijos = this.nodos.get(actual);
+	public DecisionTree<T> otherwise(String label) throws CicloArbol {
 
-		/* Hemos llegado a un nodo hoja */
-		if (hijos == null || hijos.isEmpty())
-			return actual.getEtiqueta();
-
-		for (int i = 0; i < conditions.size(); i++) {
-			if (conditions.get(i).test(element)) {
-				return predictEach(hijos.get(i).getNodo(), element);
-			}
+		try {
+			root().encontrarNodo(label);
+			throw new CicloArbol(label, this.name);
+		} catch (NotExistingNode e) {
+			// Nombre nuevo, seguimos
 		}
 
-		/* Caso otherwise */
-		if (hijos.size() > conditions.size()) {
-			DecisionTree<T> otherwise = hijos.get(hijos.size() - 1);
-			return otherwise.predictEach(otherwise.getNodo(), element);
-		} else
-			throw new ObjetoSinSalida(actual.getEtiqueta(), element);
-
-		// return null;
-		// return this.nodo.getEtiqueta();
-	}
-
-	public Map<String, List<T>> predict(Dataset<T> data) throws ObjetoSinSalida {
-		this.classification.clear();
-		for (T element : data.getObjects()) {
-			String resultadoEtiqueta = predictEach(this.raiz, element);
-
-			this.classification.computeIfAbsent(resultadoEtiqueta, k -> new ArrayList<>()).add(element);
+		// Predicado = negación de TODOS los hijos actuales
+		Predicate<T> otherwisePredicate = p -> true;
+		for (DecisionTree<T> child : children) {
+			otherwisePredicate = otherwisePredicate.and(child.predicate.negate());
 		}
 
-		return classification;
+		DecisionTree<T> otherwiseNode = new DecisionTree<>(label, otherwisePredicate);
+		otherwiseNode.setParent(this);
+		this.children.add(otherwiseNode);
+
+		return this;
 	}
 
-	public Predicate<T> getPredicate(String etiqueta) {
-
-		return this.getPredicateEach(raiz, etiqueta, p -> true);
+	public Map<String, List<T>> predict(Dataset<T> dataset) {
+		return predict(dataset.getObjects());
 	}
 
 	@SuppressWarnings("unchecked")
-	private Predicate<T> getPredicateEach(Nodo<T> actual, String etiqueta, Predicate<T> predicado) {
+	public Map<String, List<T>> predict(T... values) {
+		return predict(List.of(values));
+	}
 
-		// Si hemos llegado al nodo buscado devolvemos el predicado
-		if (actual.getEtiqueta().equals(etiqueta))
-			return predicado;
+	private Map<String, List<T>> predict(List<T> values) {
+		Map<String, List<T>> results = new HashMap<>();
 
-		List<Predicate<? super T>> conditions = actual.getConditions();
-		List<DecisionTree<T>> hijos = this.nodos.get(actual);
-
-		if (hijos != null) {
-			for (int i = 0; i < hijos.size(); i++) {
-				Predicate<T> predicadoActual;
-
-				if (i < conditions.size()) {
-					// Las condiciones de cada hijo
-					Predicate<? super T> condicion = conditions.get(i);
-					predicadoActual = (Predicate<T>) condicion;
-				} else {
-					// Estamos en el caso otherwise, lo que implica la negación de todas las
-					// condiciones
-					Predicate<T> ningunaCondicion = p -> true;
-					for (Predicate<? super T> c : conditions) {
-						ningunaCondicion = ningunaCondicion.and(c.negate());
-					}
-					predicadoActual = ningunaCondicion;
-				}
-
-				// Buscamos el resto del predicado a través del hijo
-				Predicate<T> resultado = this.getPredicateEach(hijos.get(i).getNodo(), etiqueta,
-						predicado.and(predicadoActual));
-
-				if (resultado != null)
-					return resultado;
-			}
+		for (T value : values) {
+			evaluate(value).stream().findFirst()
+					.ifPresent(leaf -> results.computeIfAbsent(leaf, k -> new ArrayList<>()).add(value));
 		}
 
-		return null;
-	}
-	
-	
-	public void addArbolHijo(Nodo<T> nodo, DecisionTree<T> hijo) {
-		this.nodos.computeIfAbsent(nodo, n -> new ArrayList<>()).add(hijo);
+		return results;
 	}
 
-	/**
-	 * @return the nodo
-	 */
-	public Nodo<T> getNodo() {
-		return nodo;
+	private boolean evaluateRecursive(T input, List<String> results) {
+		if (!this.predicate.test(input))
+			return false;
+
+		if (children.isEmpty()) {
+			results.add(this.name);
+			return true;
+		}
+
+		for (DecisionTree<T> child : children) {
+			if (child.evaluateRecursive(input, results))
+				return true;
+		}
+
+		return false;
 	}
 
-	/**
-	 * @param nodo the nodo to set
-	 */
-	public void setNodo(Nodo<T> nodo) {
-		this.nodo = nodo;
+	public List<String> evaluate(T input) {
+		List<String> results = new ArrayList<>();
+		evaluateRecursive(input, results);
+		return results;
 	}
-	
+
+	public Predicate<T> getPredicate(String label) throws NotExistingNode {
+		List<Predicate<T>> path = new ArrayList<>();
+		if (!findPredicatePath(root(), label, path))
+			throw new NotExistingNode(label);
+
+		return path.stream().reduce(p -> true, Predicate::and);
+	}
+
+	private boolean findPredicatePath(DecisionTree<T> node, String label, List<Predicate<T>> path) {
+		path.add(node.predicate);
+
+		if (node.name != null && node.name.equals(label))
+			return true;
+
+		for (DecisionTree<T> child : node.children) {
+			if (findPredicatePath(child, label, path))
+				return true;
+		}
+
+		path.remove(path.size() - 1);
+		return false;
+	}
+
+	private void setParent(DecisionTree<T> parent) {
+		this.parent = parent;
+
+	}
+
 	@Override
 	public String toString() {
-		return raiz + " " + nodos;
+		return name + " " + children;
 	}
 
 }

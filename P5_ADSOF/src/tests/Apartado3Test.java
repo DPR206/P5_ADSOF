@@ -4,10 +4,11 @@ import java.util.function.Predicate;
 
 import decision_tree.DecisionTree;
 import exceptions.CicloArbol;
+import exceptions.NotExistingNode;
 
 public class Apartado3Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NotExistingNode {
 		
 		DecisionTree<Person> dt = buildDecisionTree();
 		
@@ -15,10 +16,12 @@ public class Apartado3Test {
 		
 		System.out.println(isOldMale.test(new Person("Miguel", 86, 72, 165, true)));
 		System.out.println(isOldMale.test(new Person("Clara", 42, 59, 162, false)));
+		System.out.println(isOldMale.test(new Person("Juan", 42, 80, 175, true)));
+		System.out.println(isOldMale.test(new Person("Ana", 30, 55, 160, false)));
 		
 	}
 	
-	private static DecisionTree<Person> buildDecisionTree(){
+	private static DecisionTree<Person> buildDecisionTree() throws NotExistingNode{
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {
 			dt.node("root")

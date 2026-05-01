@@ -11,9 +11,14 @@ public class WeatherFeaturizer implements Featurizer<Weather>{
 		return List.of("weather condition", "temperature");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getFeatureValues(Weather w) {
-		return List.of(w.getCondition(), w.getTemperature());
+	public <V extends Comparable<? super V>> V getFeatureValue(Weather w, String featureName) {
+		return switch (featureName) {
+        case "weather condition" -> (V) w.getCondition();
+        case "temperature" -> (V) w.getTemperature();
+        default -> throw new IllegalArgumentException("Unknown feature: " + featureName);
+    };
 	}
 
 }

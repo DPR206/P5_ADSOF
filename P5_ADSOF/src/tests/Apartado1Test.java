@@ -24,7 +24,7 @@ public class Apartado1Test {
 
 	private static Dataset<Person> buildDataSet() {
 		Person people[] = { new Person("Pedro", 66, 75, 180, true), new Person("Ana", 47, 54, 158, false),
-				new Person("Luis", 34, 75, 176, true), new Person("Rosa", 47, 54, 158, false) };
+				new Person("Luis", 66, 75, 176, true), new Person("Rosa", 47, 54, 158, false), new Person ("Maria", 47, 54, 158, false)};
 
 		Dataset<Person> dataset = new Dataset<>(new PersonFeaturizer());
 		dataset.addAll(people);

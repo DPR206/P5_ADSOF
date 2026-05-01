@@ -3,24 +3,17 @@ package tests;
 import dataset.*;
 import decision_tree.*;
 import exceptions.CicloArbol;
-import exceptions.ObjetoSinSalida;
+import exceptions.NotExistingNode;
 
 public class Apartado2Test {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NotExistingNode {
 		Dataset<Person> dataSet = buildDataSet();
 		DecisionTree<Person> dt = buildDecisionTree();
 		
-		try {
-			System.out.println(dt.predict(dataSet));
-		} catch (ObjetoSinSalida e) {
-			e.printStackTrace();
-		}
-		try {
-			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
-		} catch (ObjetoSinSalida e) {
-			e.printStackTrace();
-		}
+		System.out.println(dt);
+		System.out.println(dt.predict(dataSet));
+		System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
 		
 	}
 	
@@ -33,7 +26,7 @@ public class Apartado2Test {
 		return dataset;
 	}
 	
-	private static DecisionTree<Person> buildDecisionTree(){
+	private static DecisionTree<Person> buildDecisionTree() throws NotExistingNode{
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {
 			dt.node("root")

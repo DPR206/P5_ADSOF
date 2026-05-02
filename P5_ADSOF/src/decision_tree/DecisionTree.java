@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 
 import dataset.*;
 import exceptions.*;
+import visualizers.DecisionTreeVisitor;
 
 /**
  * 
@@ -20,15 +21,11 @@ public class DecisionTree<T> {
 	private List<DecisionTree<T>> children = new ArrayList<>();
 
 	public DecisionTree() {
+		this.name = "root";
 		this.predicate = p -> true;
 	}
 
-	public DecisionTree(String name) {
-		this.name = name;
-		this.predicate = p -> true;
-	}
-
-	public DecisionTree(String name, Predicate<T> p) {
+	private DecisionTree(String name, Predicate<T> p) {
 		this.name = name;
 		this.predicate = p;
 	}
@@ -77,7 +74,6 @@ public class DecisionTree<T> {
 
 		return this;
 	}
-
 
 	public DecisionTree<T> otherwise(String label) throws CicloArbol {
 
@@ -169,16 +165,27 @@ public class DecisionTree<T> {
 
 	private void setParent(DecisionTree<T> parent) {
 		this.parent = parent;
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public List<DecisionTree<T>> getChildren() {
+		return children;
+	}
+
+	public boolean isLeaf() {
+		return children.isEmpty();
+	}
+	
+	public void accept(DecisionTreeVisitor<T> visitor) {
+	    visitor.visit(this);
 	}
 
 	@Override
 	public String toString() {
 		return name + " " + children;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 }

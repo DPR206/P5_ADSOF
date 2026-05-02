@@ -22,7 +22,7 @@ public class GreedyTreeLearner<T, S> {
 
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset) {
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
-		DecisionTree<T> tree = new DecisionTree<>("root");
+		DecisionTree<T> tree = new DecisionTree<>();
 		buildTree(tree, dataset, allFeatures);
 		return tree;
 
@@ -33,7 +33,7 @@ public class GreedyTreeLearner<T, S> {
 		dataset.addAll(objects);
 
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
-		DecisionTree<T> tree = new DecisionTree<>("root");
+		DecisionTree<T> tree = new DecisionTree<>();
 		buildTree(tree, dataset, allFeatures);
 		return tree;
 	}
@@ -42,7 +42,7 @@ public class GreedyTreeLearner<T, S> {
 		// Caso base: Todos los objetos tienen la misma label
 		if (dataset.allSameLabel())
 			return;
-		// Caso base: Sin features disponibles
+		// Caso base2: Sin features disponibles
 		if (availableFeatures.isEmpty())
 			return;
 
@@ -60,10 +60,10 @@ public class GreedyTreeLearner<T, S> {
 			Object featureValue = entry.getKey();
 			LabeledDataSet<T, S> subset = entry.getValue();
 
-			// Nombre del nodo hijo: "feature=valor"
+			// Nombre del nodo hijo "nombre del padre + feature"
 			String childName = (tree.getName().equals("root")? "" : tree.getName() + "_") + featureValue;
 
-			// El predicado es feature == bestFeature
+			// Condición del nodo: featureValue == bestFeatureValue
 			Featurizer<T> featurizer = dataset.getFeaturizer();
 			Predicate<T> localCondition = obj -> featurizer.getFeatureValue(obj, bestFeature).equals(featureValue);
 

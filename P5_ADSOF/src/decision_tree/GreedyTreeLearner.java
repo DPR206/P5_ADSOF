@@ -13,14 +13,13 @@ public class GreedyTreeLearner<T, S> {
 
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset) {
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
-		DecisionTree<T> tree = new DecisionTree<>();
-		buildTree(tree, dataset, allFeatures, "root");
+		DecisionTree<T> tree = new DecisionTree<>("root");
+		buildTree(tree, dataset, allFeatures);
 		return tree;
 
 	}
 
-	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures,
-			String rootName) {
+	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures) {
 		// Caso base: Todos los objetos tienen la misma label
 		if (dataset.allSameLabel())
 			return;
@@ -50,20 +49,20 @@ public class GreedyTreeLearner<T, S> {
 			Predicate<T> localCondition = obj -> featurizer.getFeatureValue(obj, bestFeature).equals(featureValue);
 
 			try {
-				tree.node(rootName).withCondition(childName, localCondition);
+				tree.withCondition(childName, localCondition);
 				DecisionTree<T> subtree = tree.node(childName);
 
-				buildTree(subtree, subset, remainingFeatures, childName);
+				buildTree(subtree, subset, remainingFeatures);
 
 			} catch (CicloArbol | NotExistingNode e) {
 				throw new RuntimeException("Error construyendo el árbol en nodo: " + childName, e);
 			}
 		}
 		
-		String otherwiseName = rootName + "_otherwise";
+		String otherwiseName = tree.getName() + "_otherwise";
 		try {
-			tree.node(rootName).otherwise(otherwiseName);
-		} catch (CicloArbol | NotExistingNode e) {
+			tree.otherwise(otherwiseName);
+		} catch (CicloArbol e) {
 			throw new RuntimeException("Error construyendo el árbol en nodo: " + otherwiseName, e);
 		}
 	}

@@ -18,7 +18,6 @@ public class Apartado4Test {
 		System.out.println("=== Predict del dataset: ===");
 		System.out.println(tree.predict(dataset));
 
-		//SI NO HA VISTO EL VALOR NUNCA LO AÑADE??
 		Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
 				new Weather(WeatherCondition.RAINY, Temperature.COLD),
 				new Weather(WeatherCondition.SANDSTORM, Temperature.MILD),
@@ -26,7 +25,7 @@ public class Apartado4Test {
 
 		System.out.println("=== Clasificación de nuevos objetos ===");
 		for (Weather w : tests) {
-			System.out.println(w + " → ¿Jugar al tenis? " + tree.predict(w));
+			System.out.println(w + " -> " + tree.predict(w));
 		}
 
 	}

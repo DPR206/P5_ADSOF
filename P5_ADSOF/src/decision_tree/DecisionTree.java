@@ -14,9 +14,9 @@ import exceptions.*;
  */
 public class DecisionTree<T> {
 
-	private String name = null;
-	private Predicate<T> predicate = null;
-	private DecisionTree<T> parent = null;
+	private String name;
+	private Predicate<T> predicate;
+	private DecisionTree<T> parent;
 	private List<DecisionTree<T>> children = new ArrayList<>();
 
 	public DecisionTree() {
@@ -175,6 +175,10 @@ public class DecisionTree<T> {
 	@Override
 	public String toString() {
 		return name + " " + children;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

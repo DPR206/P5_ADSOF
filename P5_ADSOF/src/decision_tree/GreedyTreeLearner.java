@@ -61,7 +61,7 @@ public class GreedyTreeLearner<T, S> {
 			LabeledDataSet<T, S> subset = entry.getValue();
 
 			// Nombre del nodo hijo: "feature=valor"
-			String childName = featureValue.toString();
+			String childName = (tree.getName().equals("root")? "" : tree.getName() + "_") + featureValue;
 
 			// El predicado es feature == bestFeature
 			Featurizer<T> featurizer = dataset.getFeaturizer();

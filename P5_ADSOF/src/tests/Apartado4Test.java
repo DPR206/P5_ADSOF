@@ -7,7 +7,6 @@ public class Apartado4Test {
 
 	public static void main(String[] args) {
 		LabeledDataSet<Weather, Boolean> dataset = buildDataSet();
-		System.out.println("Dataset : " + dataset);
 
 		GreedyTreeLearner<Weather, Boolean> learner = new GreedyTreeLearner<>();
 		DecisionTree<Weather> tree = learner.learn(dataset);

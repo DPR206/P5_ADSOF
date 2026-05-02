@@ -16,7 +16,7 @@ public class Apartado4Test {
 		System.out.println(tree + "\n");
 		
 		System.out.println("=== Predict del dataset: ===");
-		System.out.println(tree.predict(dataset));
+		System.out.println(tree.predict(dataset) + "\n");
 
 		Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
 				new Weather(WeatherCondition.RAINY, Temperature.COLD),

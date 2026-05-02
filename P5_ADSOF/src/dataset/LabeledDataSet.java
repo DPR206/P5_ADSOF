@@ -43,4 +43,8 @@ public class LabeledDataSet<T, S> extends Dataset<T> {
 		}
 		return subsets;
 	}
+
+	public Object getLabel(T obj) {
+		return etiquetador.asignarEtiqueta(obj);
+	}
 }

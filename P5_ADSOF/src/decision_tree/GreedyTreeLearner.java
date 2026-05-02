@@ -5,10 +5,19 @@ import java.util.function.Predicate;
 
 import dataset.*;
 import exceptions.*;
+import strategies.RandomStrategy;
+import strategies.Strategy;
 
 public class GreedyTreeLearner<T, S> {
-
+	
+	private final Strategy<T, S> strategy;
+	
 	public GreedyTreeLearner() {
+		this.strategy = new RandomStrategy<T, S>();
+	}
+
+	public GreedyTreeLearner(Strategy<T, S> strategy) {
+		this.strategy = strategy;
 	}
 
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset) {
@@ -17,6 +26,16 @@ public class GreedyTreeLearner<T, S> {
 		buildTree(tree, dataset, allFeatures);
 		return tree;
 
+	}
+
+	public DecisionTree<T> learn(T[] objects, Featurizer<T> featurizer, LabelProvider<T, S> labeler) {
+		LabeledDataSet<T, S> dataset = new LabeledDataSet<T, S>(featurizer, labeler);
+		dataset.addAll(objects);
+
+		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
+		DecisionTree<T> tree = new DecisionTree<>("root");
+		buildTree(tree, dataset, allFeatures);
+		return tree;
 	}
 
 	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures) {
@@ -30,7 +49,7 @@ public class GreedyTreeLearner<T, S> {
 		dataset.removeDuplicates();
 
 		// Coger bestFeature y borrar de remaining features
-		String bestFeature = chooseBestFeature(dataset, availableFeatures);
+		String bestFeature = strategy.chooseBestFeature(dataset, availableFeatures);
 		Set<String> remainingFeatures = new LinkedHashSet<>(availableFeatures);
 		remainingFeatures.remove(bestFeature);
 
@@ -58,19 +77,13 @@ public class GreedyTreeLearner<T, S> {
 				throw new RuntimeException("Error construyendo el árbol en nodo: " + childName, e);
 			}
 		}
-		
+
 		String otherwiseName = tree.getName() + "_otherwise";
 		try {
 			tree.otherwise(otherwiseName);
 		} catch (CicloArbol e) {
 			throw new RuntimeException("Error construyendo el árbol en nodo: " + otherwiseName, e);
 		}
-	}
-
-	private String chooseBestFeature(LabeledDataSet<T, S> data, Set<String> availableFeatures) {
-		// Selección aleatoria
-		List<String> featureList = new ArrayList<>(availableFeatures);
-		return featureList.get(new Random().nextInt(featureList.size()));
 	}
 
 }

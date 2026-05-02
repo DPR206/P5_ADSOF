@@ -42,6 +42,9 @@ public class Weather {
 		this.temperature = temperature;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "(Condition: " + condition + ", Temperature: " + temperature + ")";
+	}
 	
 }

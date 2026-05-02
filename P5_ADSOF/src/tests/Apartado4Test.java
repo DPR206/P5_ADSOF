@@ -2,7 +2,6 @@ package tests;
 
 import dataset.*;
 import decision_tree.*;
-import exceptions.ObjetoSinSalida;
 
 public class Apartado4Test {
 
@@ -15,21 +14,20 @@ public class Apartado4Test {
 
 		System.out.println("=== Árbol de decisión: ===");
 		System.out.println(tree + "\n");
+		
+		System.out.println("=== Predict del dataset: ===");
+		System.out.println(tree.predict(dataset));
 
-		/*Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
+		//SI NO HA VISTO EL VALOR NUNCA LO AÑADE??
+		Weather[] tests = { new Weather(WeatherCondition.SUNNY, Temperature.HOT),
 				new Weather(WeatherCondition.RAINY, Temperature.COLD),
 				new Weather(WeatherCondition.SANDSTORM, Temperature.MILD),
 				new Weather(WeatherCondition.SUNNY, Temperature.COLD), };
 
 		System.out.println("=== Clasificación de nuevos objetos ===");
 		for (Weather w : tests) {
-			try {
-				System.out.println(w + " → ¿Jugar al tenis? " + tree.predict(w));
-			} catch (ObjetoSinSalida e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
+			System.out.println(w + " → ¿Jugar al tenis? " + tree.predict(w));
+		}
 
 	}
 

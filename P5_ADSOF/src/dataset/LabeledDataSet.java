@@ -29,15 +29,18 @@ public class LabeledDataSet<T, S> extends Dataset<T> {
 		S first = labelOf(objects.get(0));
 		return objects.stream().allMatch(o -> labelOf(o).equals(first));
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public Map<Object, LabeledDataSet<T, S>> split(String feature) {
 		Map<Object, LabeledDataSet<T, S>> subsets = new LinkedHashMap<>();
 		for (T obj : objects) {
 			Object val = featurizer.getFeatureValue(obj, feature);
-			subsets.computeIfAbsent(val, v -> new LabeledDataSet<>(featurizer, etiquetador)).objects.add(obj);
+			LabeledDataSet<T, S> newDataset = new LabeledDataSet<>(featurizer, etiquetador);
+			newDataset.removeFeature(feature);
+
+			subsets.putIfAbsent(val, newDataset);
+			subsets.get(val).addAll(obj);
 		}
-		System.out.println("Subsets en funcion del feature: " + feature + " == " + subsets);
 		return subsets;
 	}
-
 }

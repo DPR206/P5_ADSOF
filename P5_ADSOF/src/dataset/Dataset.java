@@ -6,12 +6,10 @@ public class Dataset<T> {
 
 	private final Map<String, Feature<?>> features;
 	protected final Featurizer<T> featurizer;
-	private int size;
 	protected List<T> objects = new ArrayList<>();
 
 	public Dataset(Featurizer<T> featurizer) {
 		this.featurizer = featurizer;
-		this.size = 0;
 		this.features = new LinkedHashMap<>();
 		for (String name : featurizer.getFeatureNames()) {
 			features.put(name, new Feature<>(name));
@@ -91,7 +89,7 @@ public class Dataset<T> {
 	}
 
 	public int size() {
-		return size;
+		return objects.size();
 	}
 
 	/**
@@ -110,11 +108,14 @@ public class Dataset<T> {
 	public void addAll(T... items) {
 		for (T item : items) {
 			this.objects.add(item);
-			List<String> names = featurizer.getFeatureNames();
-			for (String n : names) {
-				addToFeature(features.get(n), featurizer.getFeatureValue(item, n));
+			for(String f : features.keySet()) {
+				addToFeature(features.get(f), featurizer.getFeatureValue(item, f));
 			}
 		}
+	}
+	
+	protected void removeFeature(String feature) {
+		features.remove(feature);
 	}
 
 	/**

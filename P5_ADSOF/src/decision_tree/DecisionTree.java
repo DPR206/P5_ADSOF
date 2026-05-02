@@ -138,7 +138,7 @@ public class DecisionTree<T> {
 		return false;
 	}
 
-	public List<String> evaluate(T input) {
+	private List<String> evaluate(T input) {
 		List<String> results = new ArrayList<>();
 		evaluateRecursive(input, results);
 		return results;

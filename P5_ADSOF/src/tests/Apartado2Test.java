@@ -4,6 +4,7 @@ import dataset.*;
 import decision_tree.*;
 import exceptions.CicloArbol;
 import exceptions.NotExistingNode;
+import exceptions.ObjetoSinSalida;
 
 public class Apartado2Test {
 	
@@ -12,8 +13,16 @@ public class Apartado2Test {
 		DecisionTree<Person> dt = buildDecisionTree();
 		
 		System.out.println(dt);
-		System.out.println(dt.predict(dataSet));
-		System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
+		try {
+			System.out.println(dt.predict(dataSet));
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
+		try {
+			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

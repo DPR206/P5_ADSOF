@@ -2,7 +2,7 @@ package dataset;
 
 import java.util.*;
 
-public class Feature<V extends Comparable<V>> extends ArrayList<V> {
+public class Feature<V extends Comparable<? super V>> extends ArrayList<V> {
 
 	private static final long serialVersionUID = 1L;
 	private final String name;

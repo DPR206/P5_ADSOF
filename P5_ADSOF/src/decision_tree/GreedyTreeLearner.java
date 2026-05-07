@@ -23,7 +23,7 @@ public class GreedyTreeLearner<T, S> {
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset) {
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
 		DecisionTree<T> tree = new DecisionTree<>();
-		buildTree(tree, dataset, allFeatures);
+		buildTree(tree, dataset, allFeatures, new LinkedList<String>());
 		return tree;
 
 	}
@@ -34,11 +34,11 @@ public class GreedyTreeLearner<T, S> {
 
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
 		DecisionTree<T> tree = new DecisionTree<>();
-		buildTree(tree, dataset, allFeatures);
+		buildTree(tree, dataset, allFeatures, new LinkedList<String>());
 		return tree;
 	}
 
-	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures) {
+	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures, List<String> removedFeatures) {
 		// Caso base: Todos los objetos tienen la misma label
 		if (dataset.allSameLabel())
 			return;
@@ -54,9 +54,10 @@ public class GreedyTreeLearner<T, S> {
 		remainingFeatures.remove(bestFeature);
 
 		// Split del dataset en función de bestFeature
-		Map<Object, LabeledDataSet<T, S>> subsets = dataset.split(bestFeature);
+		Map<?, LabeledDataSet<T, S>> subsets = dataset.split(bestFeature, removedFeatures);
+		removedFeatures.add(bestFeature);
 
-		for (Map.Entry<Object, LabeledDataSet<T, S>> entry : subsets.entrySet()) {
+		for (Map.Entry<?, LabeledDataSet<T, S>> entry : subsets.entrySet()) {
 			Object featureValue = entry.getKey();
 			LabeledDataSet<T, S> subset = entry.getValue();
 
@@ -71,7 +72,7 @@ public class GreedyTreeLearner<T, S> {
 				tree.withCondition(childName, localCondition);
 				DecisionTree<T> subtree = tree.node(childName);
 
-				buildTree(subtree, subset, remainingFeatures);
+				buildTree(subtree, subset, remainingFeatures, removedFeatures);
 
 			} catch (CicloArbol | NotExistingNode e) {
 				throw new RuntimeException("Error construyendo el árbol en nodo: " + childName, e);

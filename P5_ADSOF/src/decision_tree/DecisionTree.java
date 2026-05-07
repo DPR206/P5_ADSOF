@@ -81,7 +81,6 @@ public class DecisionTree<T> {
 			root().encontrarNodo(label);
 			throw new CicloArbol(label, this.name);
 		} catch (NotExistingNode e) {
-			// Nombre nuevo, seguimos
 		}
 
 		// Predicado = negación de TODOS los hijos actuales
@@ -97,21 +96,23 @@ public class DecisionTree<T> {
 		return this;
 	}
 
-	public Map<String, List<T>> predict(Dataset<T> dataset) {
+	public Map<String, List<T>> predict(Dataset<T> dataset) throws ObjetoSinSalida {
 		return predict(dataset.getObjects());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, List<T>> predict(T... values) {
+	public Map<String, List<T>> predict(T... values) throws ObjetoSinSalida {
 		return predict(List.of(values));
 	}
 
-	private Map<String, List<T>> predict(List<T> values) {
+	private Map<String, List<T>> predict(List<T> values) throws ObjetoSinSalida {
 		Map<String, List<T>> results = new HashMap<>();
 
 		for (T value : values) {
-			evaluate(value).stream().findFirst()
-					.ifPresent(leaf -> results.computeIfAbsent(leaf, k -> new ArrayList<>()).add(value));
+			List<String> leaves = evaluate(value);
+		    if (leaves.isEmpty())
+		        throw new ObjetoSinSalida(value);
+		    results.computeIfAbsent(leaves.get(0), k -> new ArrayList<>()).add(value);
 		}
 
 		return results;

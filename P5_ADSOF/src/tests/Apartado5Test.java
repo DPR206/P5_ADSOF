@@ -3,6 +3,7 @@ package tests;
 import dataset.LabeledDataSet;
 import decision_tree.DecisionTree;
 import decision_tree.GreedyTreeLearner;
+import exceptions.ObjetoSinSalida;
 import strategies.MisclassificationStrategy;
 import strategies.RandomStrategy;
 
@@ -19,7 +20,11 @@ public class Apartado5Test {
 		System.out.println(treeMisclassification + "\n");
 		
 		System.out.println("=== Predict del dataset: ===");
-		System.out.println(treeMisclassification.predict(dataset) + "\n");
+		try {
+			System.out.println(treeMisclassification.predict(dataset) + "\n");
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("=== Con estrategia \"Random\": ===\n");
 		GreedyTreeLearner<Weather, Boolean> learnerRandom = new GreedyTreeLearner<>(new RandomStrategy<Weather, Boolean>());
@@ -29,7 +34,11 @@ public class Apartado5Test {
 		System.out.println(treeRandom + "\n");
 		
 		System.out.println("=== Predict del dataset: ===");
-		System.out.println(treeRandom.predict(dataset) + "\n");
+		try {
+			System.out.println(treeRandom.predict(dataset) + "\n");
+		} catch (ObjetoSinSalida e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static DecisionTree<Weather> learnTree() {

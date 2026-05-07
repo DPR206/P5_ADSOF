@@ -6,8 +6,15 @@ import exceptions.CicloArbol;
 import exceptions.NotExistingNode;
 import exceptions.ObjetoSinSalida;
 
-public class Apartado2Test {
+/**
+ * Esta clase es un test de prueba para el apartado 2
+ */
+class Apartado2Test {
 	
+	/**
+	 * Programa ejecutable
+	 * @param args Argumentos de entrada
+	 */
 	public static void main(String[] args){
 		Dataset<Person> dataSet = buildDataSet();
 		DecisionTree<Person> dt = buildDecisionTree();
@@ -43,6 +50,10 @@ public class Apartado2Test {
 		
 	}
 	
+	/**
+	 * Construye un dataset de objetos Person
+	 * @return El dataset de personas
+	 */
 	private static Dataset<Person> buildDataSet() {
 		Person people[] = { new Person("Pedro", 66, 75, 180, true), new Person("Ana", 47, 54, 158, false),
 				new Person("Luis", 34, 75, 176, true), new Person("Rosa", 47, 54, 158, false) };
@@ -52,6 +63,10 @@ public class Apartado2Test {
 		return dataset;
 	}
 	
+	/**
+	 * Construye un árbol de decisión parametrizado con Person
+	 * @return El árbol de decisión construido
+	 */
 	private static DecisionTree<Person> buildDecisionTree(){
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {
@@ -73,6 +88,10 @@ public class Apartado2Test {
 		return dt;
 	}
 	
+	/**
+	 * Intenta construir un árbol que tiene ciclos
+	 * @return El árbol si se construyera
+	 */
 	private static DecisionTree<Person> buildDecisionTreeCiclos(){
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {
@@ -94,6 +113,10 @@ public class Apartado2Test {
 		return dt;
 	}
 	
+	/**
+	 * Construye un árbol para que se queden objetos sin salida
+	 * @return El árbol construido
+	 */
 	private static DecisionTree<Person> buildDecisionTreeSinSalida(){
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {

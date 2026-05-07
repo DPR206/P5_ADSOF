@@ -4,7 +4,17 @@ import java.util.List;
 
 import dataset.Featurizer;
 
+/**
+ * Esta clase representa un featurizer de personas
+ */
 public class PersonFeaturizer implements Featurizer<Person> {
+	
+	/**
+	 * Constructor de personFeaturizer
+	 */
+	public PersonFeaturizer(){
+		
+	}
 
 	@Override
 	public List<String> getFeatureNames() {

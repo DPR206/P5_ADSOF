@@ -2,7 +2,18 @@ package visualizers;
 
 import decision_tree.DecisionTree;
 
+/**
+ * Esta clase representa un visualizador en texto indentado que visita un árbol de decisión
+ * @param <T> Tipo del objeto con el que se parametriza el árbol de decisión
+ */
 public class TextVisualizer<T> implements DecisionTreeVisitor<T> {
+	
+	/**
+	 * Constructor del visualizador de texto
+	 */
+	public TextVisualizer() {
+		
+	}
 
 	private final StringBuilder sb = new StringBuilder();
 	private int depth = 0;

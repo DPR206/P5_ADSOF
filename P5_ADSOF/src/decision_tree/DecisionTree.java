@@ -47,7 +47,7 @@ public class DecisionTree<T> {
 	 * 
 	 * @param label Nombre del nodo
 	 * @return Árbol que representa el nodo y sus hijos
-	 * @throws NotExistingNode, se lanza en caso de que no exista un nodo con ese
+	 * @throws NotExistingNode se lanza en caso de que no exista un nodo con ese
 	 *                          nombre
 	 */
 	private DecisionTree<T> encontrarNodo(String label) throws NotExistingNode {
@@ -82,7 +82,7 @@ public class DecisionTree<T> {
 	 * 
 	 * @param name Nombre del nodo
 	 * @return Árbol asociado a dicho nodo
-	 * @throws NotExistingNode, se lanza en caso de que no exista un nodo con ese
+	 * @throws NotExistingNode se lanza en caso de que no exista un nodo con ese
 	 *                          nombre
 	 */
 	public DecisionTree<T> node(String name) throws NotExistingNode {
@@ -99,7 +99,7 @@ public class DecisionTree<T> {
 	 * @param label     Nombre del nodo hijo
 	 * @param condition Condición de dicho nodo
 	 * @return El árbol sobre el que está operando
-	 * @throws CicloArbol, se lanza si se produce un ciclo en la creación del nuevo
+	 * @throws CicloArbol se lanza si se produce un ciclo en la creación del nuevo
 	 *                     nodo
 	 */
 	@SuppressWarnings("unchecked")
@@ -124,7 +124,7 @@ public class DecisionTree<T> {
 	 * 
 	 * @param label Nombre del nodo
 	 * @return El árbol sobre el que está operando
-	 * @throws CicloArbol, se lanza si se produce un ciclo en la creación del nuevo
+	 * @throws CicloArbol se lanza si se produce un ciclo en la creación del nuevo
 	 *                     nodo
 	 */
 	public DecisionTree<T> otherwise(String label) throws CicloArbol {
@@ -154,7 +154,7 @@ public class DecisionTree<T> {
 	 * @param dataset Dataset con los objetos que se van a evaluar
 	 * @return Mapa que corresponde cada nombre de nodo con los objetos que caerían
 	 *         en él
-	 * @throws ObjetoSinSalida, se lanza si un objeto no es capaz de caer en ninguna
+	 * @throws ObjetoSinSalida se lanza si un objeto no es capaz de caer en ninguna
 	 *                          hoja
 	 */
 	public Map<String, List<T>> predict(Dataset<T> dataset) throws ObjetoSinSalida {
@@ -167,7 +167,7 @@ public class DecisionTree<T> {
 	 * @param values Diferentes objetos que se van a evaluar
 	 * @return Mapa que corresponde cada nombre de nodo con los objetos que caerían
 	 *         en él
-	 * @throws ObjetoSinSalida, se lanza si un objeto no es capaz de caer en ninguna
+	 * @throws ObjetoSinSalida se lanza si un objeto no es capaz de caer en ninguna
 	 *                          hoja
 	 */
 	@SuppressWarnings("unchecked")
@@ -182,7 +182,7 @@ public class DecisionTree<T> {
 	 * @param values Lista de objetos que se van a evaluar
 	 * @return Mapa que corresponde cada nombre de nodo con los objetos que caerían
 	 *         en él
-	 * @throws ObjetoSinSalida, se lanza si un objeto no es capaz de caer en ninguna
+	 * @throws ObjetoSinSalida se lanza si un objeto no es capaz de caer en ninguna
 	 *                          hoja
 	 */
 	private Map<String, List<T>> predict(List<T> values) throws ObjetoSinSalida {
@@ -240,7 +240,7 @@ public class DecisionTree<T> {
 	 * 
 	 * @param label Nombre del nodo
 	 * @return El predicado con la condición
-	 * @throws NotExistingNode, se lanza si no existe ningún nodo con ese nombre
+	 * @throws NotExistingNode se lanza si no existe ningún nodo con ese nombre
 	 */
 	public Predicate<T> getPredicate(String label) throws NotExistingNode {
 		List<Predicate<T>> path = new ArrayList<>();

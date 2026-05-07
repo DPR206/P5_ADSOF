@@ -4,7 +4,17 @@ import java.util.List;
 
 import dataset.Featurizer;
 
+/**
+ * Esta clase representa un featurizer de Weather
+ */
 public class WeatherFeaturizer implements Featurizer<Weather>{
+	
+	/**
+	 * Cosntructor del featurizer de Weather
+	 */
+	public WeatherFeaturizer() {
+		
+	}
 
 	@Override
 	public List<String> getFeatureNames() {

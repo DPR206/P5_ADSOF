@@ -4,8 +4,15 @@ import dataset.*;
 import decision_tree.*;
 import exceptions.ObjetoSinSalida;
 
-public class Apartado4Test {
+/**
+ * Esta clase es un test de prueba para el apartado 4
+ */
+class Apartado4Test {
 
+	/**
+	 * Programa ejecutable
+	 * @param args Argumentos de entrada
+	 */
 	public static void main(String[] args) {
 		LabeledDataSet<Weather, Boolean> dataset = buildDataSetWeather();
 		GreedyTreeLearner<Weather, Boolean> learner = new GreedyTreeLearner<>();
@@ -35,8 +42,8 @@ public class Apartado4Test {
 			}
 		}
 		
-		LabeledDataSet<Person, Boolean> datasetPerson = buildDataSetPerson();
-		GreedyTreeLearner<Person, Boolean> learnerPerson = new GreedyTreeLearner<>();
+		LabeledDataSet<Person, String> datasetPerson = buildDataSetPerson();
+		GreedyTreeLearner<Person, String> learnerPerson = new GreedyTreeLearner<>();
 		DecisionTree<Person> treePerson = learnerPerson.learn(datasetPerson);
 
 		System.out.println("\n=== Árbol de decisión de Person: ===");
@@ -51,6 +58,10 @@ public class Apartado4Test {
 
 	}
 
+	/**
+	 * Construye un LabeledDataSet parametrizado para Weather
+	 * @return El labeleDataset construido
+	 */
 	private static LabeledDataSet<Weather, Boolean> buildDataSetWeather() {
 		Weather conditions[] = { new Weather(WeatherCondition.RAINY, Temperature.COLD),
 				new Weather(WeatherCondition.RAINY, Temperature.HOT),
@@ -70,11 +81,35 @@ public class Apartado4Test {
 
 	}
 	
-	private static LabeledDataSet<Person, Boolean> buildDataSetPerson() {
-		Person people[] = { new Person("Pedro", 66, 75, 176, true), new Person("Ana", 47, 34, 158, false),
-				new Person("Luis", 66, 74, 180, true), new Person("Rosa", 47, 54, 189, false), new Person ("Maria", 45, 54, 158, false)};
+	/**
+	 * Construye un LabeledDataSet parametrizado para Person
+	 * @return El labeleDataset construido
+	 */
+	private static LabeledDataSet<Person, String> buildDataSetPerson() {
+		Person people[] = {
+		        new Person("Luis",    22, 65,  175, true),
+		        new Person("Carlos",  25, 70,  180, true),
+		        new Person("Jorge",   28, 68,  177, true),
+		        new Person("Marcos",  24, 95,  182, true),
+		        new Person("Diego",   27, 100, 185, true),
+		        new Person("Pedro",   66, 72,  176, true),
+		        new Person("Antonio", 70, 68,  170, true),
+		        new Person("Manuel",  65, 75,  173, true),
+		        new Person("Roberto", 68, 98,  178, true),
+		        new Person("Felipe",  72, 105, 174, true),
+		        new Person("Ana",     23, 52,  162, false),
+		        new Person("Laura",   26, 55,  165, false),
+		        new Person("Sofia",   29, 50,  160, false),
+		        new Person("Carmen",  25, 85,  168, false),
+		        new Person("Lucia",   28, 90,  170, false),
+		        new Person("Rosa",    64, 58,  158, false),
+		        new Person("Maria",   67, 54,  155, false),
+		        new Person("Teresa",  70, 60,  157, false),
+		        new Person("Pilar",   66, 88,  162, false),
+		        new Person("Amparo",  69, 92,  160, false),
+		    };
 		
-		LabeledDataSet<Person, Boolean> ds = new LabeledDataSet<>(new PersonFeaturizer(), new IsOldMale());
+		LabeledDataSet<Person, String> ds = new LabeledDataSet<>(new PersonFeaturizer(), new FitnessLevelLabeler());
 		ds.addAll(people);
 		return ds;
 	}

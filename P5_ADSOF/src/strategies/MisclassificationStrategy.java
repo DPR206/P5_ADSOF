@@ -3,7 +3,19 @@ package strategies;
 import java.util.*;
 import dataset.LabeledDataSet;
 
+/**
+ * Esta clase representa la estrategia de clasificación errónea para seleccionar la mejor feature
+ * @param <T> Tipo del objeto que se guarda en el dataset
+ * @param <S> Tipo del valor de la etiqueta del labeledDataset
+ */
 public class MisclassificationStrategy<T, S> implements Strategy<T, S> {
+	
+	/**
+	 * Cosntructor de la estrategia de clasificación errónea
+	 */
+	public MisclassificationStrategy(){
+		
+	}
 
 	@Override
 	public String chooseBestFeature(LabeledDataSet<T, S> dataset, Set<String> availableFeatures) {
@@ -17,7 +29,7 @@ public class MisclassificationStrategy<T, S> implements Strategy<T, S> {
 			for (LabeledDataSet<T, S> group : groups.values()) {
 				Map<S, Long> labelCounts = new HashMap<>();
 				for (T obj : group.getObjects()) {
-					S label = group.getLabel(obj);
+					S label = group.labelOf(obj);
 					labelCounts.merge(label, 1L, Long::sum);
 				}
 				long majorityCount = Collections.max(labelCounts.values());

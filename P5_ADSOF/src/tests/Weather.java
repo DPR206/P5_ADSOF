@@ -1,13 +1,18 @@
 package tests;
 
+/**
+ * Esta clase representa una condición meteorológica
+ */
 public class Weather {
-	
+	/** Condicion del tiempo */
 	private WeatherCondition condition;
+	/** Temperatura */
 	private Temperature temperature;
 	
 	/**
-	 * @param condition
-	 * @param temperature
+	 * Constructor de la clase Weather
+	 * @param condition Condición del tiempo
+	 * @param temperature Temperatura
 	 */
 	public Weather(WeatherCondition condition, Temperature temperature) {
 		this.condition = condition;
@@ -15,31 +20,18 @@ public class Weather {
 	}
 
 	/**
-	 * @return the condition
+	 * Devuelve la condición del tiempo
+	 * @return Condición del tiempo
 	 */
 	public WeatherCondition getCondition() {
 		return condition;
 	}
-
 	/**
-	 * @param condition the condition to set
-	 */
-	public void setCondition(WeatherCondition condition) {
-		this.condition = condition;
-	}
-
-	/**
+	 * Devuelve la temperatura
 	 * @return the temperature
 	 */
 	public Temperature getTemperature() {
 		return temperature;
-	}
-
-	/**
-	 * @param temperature the temperature to set
-	 */
-	public void setTemperature(Temperature temperature) {
-		this.temperature = temperature;
 	}
 	
 	@Override

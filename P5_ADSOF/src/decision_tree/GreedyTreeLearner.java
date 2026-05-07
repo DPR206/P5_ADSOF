@@ -28,7 +28,7 @@ public class GreedyTreeLearner<T, S> {
 	/**
 	 * Constructor del generador de árboles especificando la estrategia
 	 * 
-	 * @param strategy
+	 * @param strategy Estrategia que se usa para seleccionar la mejor feature
 	 */
 	public GreedyTreeLearner(Strategy<T, S> strategy) {
 		this.strategy = strategy;

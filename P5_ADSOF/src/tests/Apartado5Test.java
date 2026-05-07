@@ -7,8 +7,15 @@ import exceptions.ObjetoSinSalida;
 import strategies.MisclassificationStrategy;
 import strategies.RandomStrategy;
 
-public class Apartado5Test {
+/**
+ * Esta clase es un test de prueba para el apartado 5
+ */
+class Apartado5Test {
 
+	/**
+	 * Programa ejecutable
+	 * @param args Argumentos de entrada
+	 */
 	public static void main(String[] args) {
 		LabeledDataSet<Weather, Boolean> dataset = buildDataSet();
 
@@ -41,6 +48,10 @@ public class Apartado5Test {
 		}
 	}
 	
+	/**
+	 * Construye un árbol de decisión parametrizado para Weather
+	 * @return El árbol construido
+	 */
 	public static DecisionTree<Weather> learnTree() {
 		LabeledDataSet<Weather, Boolean> dataSet = buildDataSet();
 		GreedyTreeLearner<Weather, Boolean> learner = new GreedyTreeLearner<>();
@@ -48,6 +59,10 @@ public class Apartado5Test {
 		return tree;
 	}
 
+	/**
+	 * Construye un LabeledDataSet parametrizado para Weather
+	 * @return El labeleDataset construido
+	 */
 	private static LabeledDataSet<Weather, Boolean> buildDataSet() {
 		Weather conditions[] = { new Weather(WeatherCondition.RAINY, Temperature.COLD),
 				new Weather(WeatherCondition.RAINY, Temperature.HOT),

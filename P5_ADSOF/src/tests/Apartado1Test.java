@@ -5,8 +5,15 @@ import java.util.Collections;
 import dataset.*;
 import exceptions.NotExistingFeature;
 
-public class Apartado1Test {
+/**
+ * Esta clase es un test de prueba para el apartado 1
+ */
+class Apartado1Test {
 
+	/**
+	 * Programa ejecutable
+	 * @param args Argumentos de entrada
+	 */
 	public static void main(String[] args) {
 		Dataset<Person> dataset = buildDataSet();
 		System.out.println("=== Dataset creado: ===");
@@ -36,6 +43,10 @@ public class Apartado1Test {
 		}
 	}
 
+	/**
+	 * Construye un dataset de personas
+	 * @return El dataset construido
+	 */
 	private static Dataset<Person> buildDataSet() {
 		Person people[] = { new Person("Pedro", 66, 75, 180, true), new Person("Ana", 47, 54, 158, false),
 				new Person("Luis", 66, 75, 180, true), new Person("Rosa", 47, 54, 158, false), new Person ("Maria", 47, 54, 158, false)};

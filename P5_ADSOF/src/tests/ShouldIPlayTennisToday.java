@@ -2,7 +2,17 @@ package tests;
 
 import dataset.*;
 
+/**
+ * Esta clase representa un etiquetador de Weather
+ */
 public class ShouldIPlayTennisToday implements LabelProvider<Weather, Boolean>{
+	
+	/**
+	 * Cosntructor de este etiquetador
+	 */
+	public ShouldIPlayTennisToday() {
+		
+	}
 
 	@Override
 	public Boolean asignarEtiqueta(Weather w) {

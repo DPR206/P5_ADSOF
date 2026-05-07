@@ -5,12 +5,19 @@ import java.util.Map;
 
 import decision_tree.DecisionTree;
 
+/**
+ * Esta clase representa un visualizador para Graphviz que visita un árbol de decisión
+ * @param <T> Tipo del objeto con el que se parametriza el árbol de decisión
+ */
 public class GraphvizVisualizer<T> implements DecisionTreeVisitor<T> {
 
     private final StringBuilder sb = new StringBuilder();
     private int nodeCounter = 0;
     private final Map<DecisionTree<T>, Integer> nodeIds = new IdentityHashMap<>();
 
+    /**
+     * Constructor de un visualizador de graphviz
+     */
     public GraphvizVisualizer() {
         sb.append("digraph DecisionTree {\n");
         sb.append("  node [shape=rectangle, style=filled, fillcolor=lightblue];\n");
@@ -37,6 +44,10 @@ public class GraphvizVisualizer<T> implements DecisionTreeVisitor<T> {
         }
     }
 
+    /**
+     * Termina de construir el texto, añadiendo el corchete final
+     * @return El texto construido
+     */
     public String getDot() {
         return sb.toString() + "}";
     }

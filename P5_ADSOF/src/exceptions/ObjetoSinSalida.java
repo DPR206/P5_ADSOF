@@ -1,5 +1,8 @@
 package exceptions;
 
+/**
+ * Esta excepción se lanza en caso de que al evaluar un objeto no pueda llegar a ninguna hoja
+ */
 public class ObjetoSinSalida extends DecisionTreeDatasetException {
 	private static final long serialVersionUID = 1L;
 	

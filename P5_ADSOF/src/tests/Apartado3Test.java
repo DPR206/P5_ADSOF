@@ -6,8 +6,15 @@ import decision_tree.DecisionTree;
 import exceptions.CicloArbol;
 import exceptions.NotExistingNode;
 
-public class Apartado3Test {
+/**
+ * Esta clase es un test de prueba para el apartado 3
+ */
+class Apartado3Test {
 
+	/**
+	 * Programa ejecutable
+	 * @param args Argumentos de entrada
+	 */
 	public static void main(String[] args) {
 
 		DecisionTree<Person> dt = buildDecisionTree();
@@ -33,6 +40,10 @@ public class Apartado3Test {
 		}
 	}
 
+	/**
+	 * Construye un árbol de decisión
+	 * @return El árbol de decisión
+	 */
 	private static DecisionTree<Person> buildDecisionTree() {
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {

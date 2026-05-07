@@ -39,10 +39,10 @@ public class Apartado4Test {
 		GreedyTreeLearner<Person, Boolean> learnerPerson = new GreedyTreeLearner<>();
 		DecisionTree<Person> treePerson = learnerPerson.learn(datasetPerson);
 
-		System.out.println("\n=== Árbol de decisión de Weather: ===");
+		System.out.println("\n=== Árbol de decisión de Person: ===");
 		System.out.println(treePerson + "\n");
 		
-		System.out.println("=== Predict del dataset de Weather: ===");
+		System.out.println("=== Predict del dataset de Person: ===");
 		try {
 			System.out.println(treePerson.predict(datasetPerson) + "\n");
 		} catch (ObjetoSinSalida e) {

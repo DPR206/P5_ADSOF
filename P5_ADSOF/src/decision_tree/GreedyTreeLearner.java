@@ -8,18 +8,38 @@ import exceptions.*;
 import strategies.RandomStrategy;
 import strategies.Strategy;
 
+/**
+ * Esta clase representa un generador de árboles de decisión a partir de un
+ * dataset
+ * 
+ * @param <T> Tipo de los objetos que guarda el dataset
+ * @param <S> Tipo de las etiquetas generadas por el etiquetador
+ */
 public class GreedyTreeLearner<T, S> {
-	
+
+	/** Estrategia utilizada para seleccionar la mejor feature */
 	private final Strategy<T, S> strategy;
-	
+
+	/** Constructor del generador de árboles */
 	public GreedyTreeLearner() {
 		this.strategy = new RandomStrategy<T, S>();
 	}
 
+	/**
+	 * Constructor del generador de árboles especificando la estrategia
+	 * 
+	 * @param strategy
+	 */
 	public GreedyTreeLearner(Strategy<T, S> strategy) {
 		this.strategy = strategy;
 	}
 
+	/**
+	 * Genera un árbol de decisión a partir de un dataset
+	 * 
+	 * @param dataset Dataset que se proporciona para generar el árbol
+	 * @return El árbol generado
+	 */
 	public DecisionTree<T> learn(LabeledDataSet<T, S> dataset) {
 		Set<String> allFeatures = new LinkedHashSet<>(dataset.getFeatureNames());
 		DecisionTree<T> tree = new DecisionTree<>();
@@ -28,6 +48,15 @@ public class GreedyTreeLearner<T, S> {
 
 	}
 
+	/**
+	 * Genera un árbol de decisión a partir de un conjunto de objetos, un featurizer
+	 * y un labeler
+	 * 
+	 * @param objects    Conjunto de objetos
+	 * @param featurizer Featurizer proporcionado
+	 * @param labeler    LabelProvider proporcionado
+	 * @return Árbol de decisión creado
+	 */
 	public DecisionTree<T> learn(T[] objects, Featurizer<T> featurizer, LabelProvider<T, S> labeler) {
 		LabeledDataSet<T, S> dataset = new LabeledDataSet<T, S>(featurizer, labeler);
 		dataset.addAll(objects);
@@ -38,7 +67,16 @@ public class GreedyTreeLearner<T, S> {
 		return tree;
 	}
 
-	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures, List<String> removedFeatures) {
+	/**
+	 * Crea el árbol de manera recursiva por nivel de profundidad
+	 * 
+	 * @param tree              Árbol de decisión creado hasta ese momento
+	 * @param dataset           Dataset a partir del cual se crea el árbol
+	 * @param availableFeatures Features que quedan por evaluar
+	 * @param removedFeatures   Features que ya han sido evaluadas
+	 */
+	private void buildTree(DecisionTree<T> tree, LabeledDataSet<T, S> dataset, Set<String> availableFeatures,
+			List<String> removedFeatures) {
 		// Caso base: Todos los objetos tienen la misma label
 		if (dataset.allSameLabel())
 			return;
@@ -62,7 +100,7 @@ public class GreedyTreeLearner<T, S> {
 			LabeledDataSet<T, S> subset = entry.getValue();
 
 			// Nombre del nodo hijo "nombre del padre + feature"
-			String childName = (tree.getName().equals("root")? "" : tree.getName() + "_") + featureValue;
+			String childName = (tree.getName().equals("root") ? "" : tree.getName() + "_") + featureValue;
 
 			// Condición del nodo: featureValue == bestFeatureValue
 			Featurizer<T> featurizer = dataset.getFeaturizer();

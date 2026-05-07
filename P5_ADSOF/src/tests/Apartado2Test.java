@@ -8,18 +8,35 @@ import exceptions.ObjetoSinSalida;
 
 public class Apartado2Test {
 	
-	public static void main(String[] args) throws NotExistingNode {
+	public static void main(String[] args){
 		Dataset<Person> dataSet = buildDataSet();
 		DecisionTree<Person> dt = buildDecisionTree();
 		
-		System.out.println(dt);
+		System.out.println("=== Árbol de decisión construido: ===");
+		System.out.println(dt + "\n");
+		
+		System.out.println("=== Predict de valores: ===");
 		try {
 			System.out.println(dt.predict(dataSet));
+			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)) + "\n");
 		} catch (ObjetoSinSalida e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("=== Intentar construir un árbol con ciclos: ===");
+		buildDecisionTreeCiclos();
+		
+		System.out.println("\n=== Intentar buscar un nodo que no existe: ===");
 		try {
-			System.out.println(dt.predict(new Person("Miguel", 86, 72, 165, true), new Person("Clara", 42, 59, 162, false)));
+			dt.node("noExiste");
+		} catch (NotExistingNode e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("\n=== Evaluar un objeto sin nodo correspondiente: ===");
+		DecisionTree<Person> dtSinSalida = buildDecisionTreeSinSalida();
+		try {
+			System.out.println(dtSinSalida.predict(new Person("Clara", 42, 59, 162, false)) + "\n");
 		} catch (ObjetoSinSalida e) {
 			e.printStackTrace();
 		}
@@ -35,21 +52,54 @@ public class Apartado2Test {
 		return dataset;
 	}
 	
-	private static DecisionTree<Person> buildDecisionTree() throws NotExistingNode{
+	private static DecisionTree<Person> buildDecisionTree(){
 		DecisionTree<Person> dt = new DecisionTree<>();
 		try {
 			dt.node("root")
-				.withCondition("male", p -> p.isMale())
-				.otherwise("female");
-		} catch (CicloArbol e) {
+			.withCondition("male", p -> p.isMale())
+			.otherwise("female");
+		} catch (CicloArbol | NotExistingNode e) {
 			e.printStackTrace();
 		}
+		
 		try {
 			dt.node("male")
-				.withCondition("old male", p -> p.getAge() > 65)
-				.withCondition("middle male", p -> p.getAge() <= 65 && p.getAge() > 34)
-				.otherwise("young male");
-		} catch (CicloArbol e) {
+			.withCondition("old male", p -> p.getAge() > 65)
+			.withCondition("middle male", p -> p.getAge() <= 65 && p.getAge() > 34)
+			.otherwise("young male");
+		} catch (CicloArbol | NotExistingNode e) {
+			e.printStackTrace();
+		}
+		return dt;
+	}
+	
+	private static DecisionTree<Person> buildDecisionTreeCiclos(){
+		DecisionTree<Person> dt = new DecisionTree<>();
+		try {
+			dt.node("root")
+			.withCondition("male", p -> p.isMale())
+			.otherwise("female");
+		} catch (CicloArbol | NotExistingNode e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			dt.node("male")
+			.withCondition("old male", p -> p.getAge() > 65)
+			.withCondition("middle male", p -> p.getAge() <= 65 && p.getAge() > 34)
+			.otherwise("root");
+		} catch (CicloArbol | NotExistingNode e) {
+			e.printStackTrace();
+		}
+		return dt;
+	}
+	
+	private static DecisionTree<Person> buildDecisionTreeSinSalida(){
+		DecisionTree<Person> dt = new DecisionTree<>();
+		try {
+			dt.node("root")
+			.withCondition("male", p -> p.isMale());
+		} catch (CicloArbol | NotExistingNode e) {
 			e.printStackTrace();
 		}
 		return dt;

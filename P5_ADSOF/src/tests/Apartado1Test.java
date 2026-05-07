@@ -3,23 +3,37 @@ package tests;
 import java.util.Collections;
 
 import dataset.*;
+import exceptions.NotExistingFeature;
 
 public class Apartado1Test {
 
 	public static void main(String[] args) {
 		Dataset<Person> dataset = buildDataSet();
-		System.out.println("dataset: " + dataset);
+		System.out.println("=== Dataset creado: ===");
+		System.out.println(dataset + "\n");
 
 		dataset.removeDuplicates();
-		System.out.println("dataset w/0 duplicates: " + dataset);
+		System.out.println("=== Dataset sin duplicados: ===");
+		System.out.println(dataset + "\n");
 
-		Feature<Integer> ages = dataset.getFeature("age");
-		System.out.println("Ages: " + ages);
-		Collections.sort(ages);
-		System.out.println("Ages sorted: " + ages);
-		System.out.println("Min ages: " + ages.getMin());
-		System.out.println("Gender distribution: " + dataset.getFeature("gender").getDistribution());
-
+		Feature<Integer> ages;
+		try {
+			ages = dataset.getFeature("age");
+			System.out.println("=== Ages: " + ages + "\n");
+			Collections.sort(ages);
+			System.out.println("=== Ages sorted: " + ages + "\n");
+			System.out.println("=== Min ages: " + ages.getMin() + "\n");
+			System.out.println("=== Gender distribution: " + dataset.getFeature("gender").getDistribution() + "\n");
+		} catch (NotExistingFeature e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("=== Coger una feature que no existe: ===");
+		try {
+			dataset.getFeature("noExiste");
+		} catch (NotExistingFeature e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static Dataset<Person> buildDataSet() {

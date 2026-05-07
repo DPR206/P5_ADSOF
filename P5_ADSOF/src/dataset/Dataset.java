@@ -2,6 +2,8 @@ package dataset;
 
 import java.util.*;
 
+import exceptions.NotExistingFeature;
+
 public class Dataset<T> {
 
     private final Map<String, Feature<?>> features;
@@ -21,10 +23,10 @@ public class Dataset<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public <V extends Comparable<V>> Feature<V> getFeature(String name) {
+    public <V extends Comparable<V>> Feature<V> getFeature(String name) throws NotExistingFeature {
         Feature<?> f = features.get(name);
         if (f == null)
-            throw new IllegalArgumentException("Feature no encontrada: " + name);
+            throw new NotExistingFeature(name);
         return (Feature<V>) f;
     }
 
